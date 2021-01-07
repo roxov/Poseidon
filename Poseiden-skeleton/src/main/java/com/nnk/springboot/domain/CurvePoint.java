@@ -31,6 +31,14 @@ public class CurvePoint {
 		this.value = value;
 	}
 
+	public CurvePoint(Integer id, Integer curveId, Double term, Double value) {
+		super();
+		this.id = id;
+		this.curveId = curveId;
+		this.term = term;
+		this.value = value;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
