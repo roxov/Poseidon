@@ -28,7 +28,23 @@ public class UserServiceTest {
 	private UserRepository userRepository;
 
 	@Test
-	public void givenAUserName_whenFindByUsername_thenReturnTheUser() {
+	public void givenAUser_whenAddUser_thenReturnCreatedUser() {
+		// GIVEN
+		User user = new User("username", "password", "fullname", "role");
+		when(userRepository.save(user)).thenReturn(user);
+
+		// WHEN
+		User result = userService.addUser(user);
+
+		// THEN
+		verify(userRepository, Mockito.times(1)).save(any(User.class));
+		assertEquals("username", result.getUsername());
+		assertEquals("fullname", result.getFullname());
+		assertEquals("role", result.getRole());
+	}
+
+	@Test
+	public void givenAUser_whenFindById_thenReturnTheUser() {
 		// GIVEN
 		User user = new User(1, "username", "password", "fullname", "role");
 		when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -37,20 +53,20 @@ public class UserServiceTest {
 		Optional<User> result = userService.findById(1);
 
 		// THEN
-		verify(userRepository, Mockito.times(1)).findByUsername("username");
+		verify(userRepository, Mockito.times(1)).findById(1);
 		// TODO : password
 		assertEquals("fullname", result.get().getFullname());
 		assertEquals("role", result.get().getRole());
 	}
 
 	@Test
-	public void givenAUser_whenAddUser_thenReturnCreatedUser() {
+	public void givenAUser_whenUpdateUser_thenReturnUpdatedUser() {
 		// GIVEN
-		User user = new User("username", "password", "fullname", "role");
+		User user = new User(1, "username", "password", "fullname", "role");
 		when(userRepository.save(user)).thenReturn(user);
 
 		// WHEN
-		User result = userService.addUser(user);
+		User result = userService.updateUser(user);
 
 		// THEN
 		verify(userRepository, Mockito.times(1)).save(any(User.class));

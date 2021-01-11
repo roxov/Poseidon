@@ -29,7 +29,22 @@ public class TradeServiceTest {
 	private TradeRepository tradeRepository;
 
 	@Test
-	public void givenAnAccount_whenFindAllByAccount_thenReturnListWithTheTrade() {
+	public void givenATrade_whenAddTrade_thenReturnCreatedTrade() {
+		// GIVEN
+		Trade trade = new Trade("account", "type");
+		when(tradeRepository.save(trade)).thenReturn(trade);
+
+		// WHEN
+		Trade result = tradeService.addTrade(trade);
+
+		// THEN
+		verify(tradeRepository, Mockito.times(1)).save(any(Trade.class));
+		assertEquals("account", result.getAccount());
+		assertEquals("type", result.getType());
+	}
+
+	@Test
+	public void givenATrade_whenFindById_thenReturnTheTrade() {
 		// GIVEN
 		Trade trade = new Trade(1, "account", "type");
 		when(tradeRepository.findById(1)).thenReturn(Optional.of(trade));
@@ -38,19 +53,19 @@ public class TradeServiceTest {
 		Optional<Trade> result = tradeService.findById(1);
 
 		// THEN
-		verify(tradeRepository, Mockito.times(1)).findAllByAccount("account");
+		verify(tradeRepository, Mockito.times(1)).findById(1);
 		assertEquals("account", result.get().getAccount());
 		assertEquals("type", result.get().getType());
 	}
 
 	@Test
-	public void givenATrade_whenAddTrade_thenReturnCreatedTrade() {
+	public void givenATrade_whenUpdateTrade_thenReturnUpdatedTrade() {
 		// GIVEN
-		Trade trade = new Trade("account", "type");
+		Trade trade = new Trade(1, "account", "type");
 		when(tradeRepository.save(trade)).thenReturn(trade);
 
 		// WHEN
-		Trade result = tradeService.addTrade(trade);
+		Trade result = tradeService.updateTrade(trade);
 
 		// THEN
 		verify(tradeRepository, Mockito.times(1)).save(any(Trade.class));

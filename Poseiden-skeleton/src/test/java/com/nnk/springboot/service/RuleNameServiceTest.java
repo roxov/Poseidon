@@ -29,7 +29,26 @@ public class RuleNameServiceTest {
 	private RuleNameRepository ruleNameRepository;
 
 	@Test
-	public void givenAName_whenFindAllByOrderNumber_thenReturnListWithTheRating() {
+	public void givenARuleName_whenAddRuleName_thenReturnCreatedRuleName() {
+		// GIVEN
+		RuleName ruleName = new RuleName("name", "description", "json", "template", "sqlStr", "sqlPart");
+		when(ruleNameRepository.save(ruleName)).thenReturn(ruleName);
+
+		// WHEN
+		RuleName result = ruleNameService.addRuleName(ruleName);
+
+		// THEN
+		verify(ruleNameRepository, Mockito.times(1)).save(any(RuleName.class));
+		assertEquals("name", result.getName());
+		assertEquals("description", result.getDescription());
+		assertEquals("json", result.getJson());
+		assertEquals("template", result.getTemplate());
+		assertEquals("sqlStr", result.getSqlStr());
+		assertEquals("sqlPart", result.getSqlPart());
+	}
+
+	@Test
+	public void givenARuleName_whenFindById_thenReturnTheRuleName() {
 		// GIVEN
 		RuleName ruleName = new RuleName(1, "name", "description", "json", "template", "sqlStr", "sqlPart");
 		when(ruleNameRepository.findById(1)).thenReturn(Optional.of(ruleName));
@@ -48,13 +67,13 @@ public class RuleNameServiceTest {
 	}
 
 	@Test
-	public void givenARuleName_whenAddRuleName_thenReturnCreatedRuleName() {
+	public void givenARuleName_whenUpdateRuleName_thenReturnUpdatedRuleName() {
 		// GIVEN
-		RuleName ruleName = new RuleName("name", "description", "json", "template", "sqlStr", "sqlPart");
+		RuleName ruleName = new RuleName(1, "name", "description", "json", "template", "sqlStr", "sqlPart");
 		when(ruleNameRepository.save(ruleName)).thenReturn(ruleName);
 
 		// WHEN
-		RuleName result = ruleNameService.addRuleName(ruleName);
+		RuleName result = ruleNameService.updateRuleName(ruleName);
 
 		// THEN
 		verify(ruleNameRepository, Mockito.times(1)).save(any(RuleName.class));

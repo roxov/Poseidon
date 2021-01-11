@@ -29,6 +29,22 @@ public class BidListServiceTest {
 	private BidListRepository bidListRepository;
 
 	@Test
+	public void givenABidList_whenAddBidList_thenReturnCreatedBidList() {
+		// GIVEN
+		BidList bidList = new BidList("account", "type", 2.2);
+		when(bidListRepository.save(bidList)).thenReturn(bidList);
+
+		// WHEN
+		BidList result = bidListService.addBidList(bidList);
+
+		// THEN
+		verify(bidListRepository, Mockito.times(1)).save(any(BidList.class));
+		assertEquals("account", result.getAccount());
+		assertEquals("type", result.getType());
+		assertEquals(2.2, result.getBidQuantity());
+	}
+
+	@Test
 	public void givenABidList_whenFindById_thenReturnTheBidList() {
 		// GIVEN
 		BidList bidList = new BidList(1, "account", "type", 2.2);
@@ -45,13 +61,13 @@ public class BidListServiceTest {
 	}
 
 	@Test
-	public void givenABidList_whenAddBidList_thenReturnCreatedBidList() {
+	public void givenABidList_whenUpdateBidList_thenReturnUpdatedBidList() {
 		// GIVEN
 		BidList bidList = new BidList("account", "type", 2.2);
 		when(bidListRepository.save(bidList)).thenReturn(bidList);
 
 		// WHEN
-		BidList result = bidListService.addBidList(bidList);
+		BidList result = bidListService.updateBidList(bidList);
 
 		// THEN
 		verify(bidListRepository, Mockito.times(1)).save(any(BidList.class));

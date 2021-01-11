@@ -29,6 +29,22 @@ public class CurvePointServiceTest {
 	private CurvePointRepository curvePointRepository;
 
 	@Test
+	public void givenACurvePoint_whenAddCurvePoint_thenReturnCreatedCurvePoint() {
+		// GIVEN
+		CurvePoint curvePoint1 = new CurvePoint(1, 15.2, 5.6);
+		when(curvePointRepository.save(curvePoint1)).thenReturn(curvePoint1);
+
+		// WHEN
+		CurvePoint result = curvePointService.addCurvePoint(curvePoint1);
+
+		// THEN
+		verify(curvePointRepository, Mockito.times(1)).save(any(CurvePoint.class));
+		assertEquals(1, result.getCurveId());
+		assertEquals(15.2, result.getTerm());
+		assertEquals(5.6, result.getValue());
+	}
+
+	@Test
 	public void givenACurvePoint_whenFindById_thenReturnTheCurvePoint() {
 		// GIVEN
 		CurvePoint curvePoint = new CurvePoint(1, 2, 15.2, 5.6);
@@ -45,13 +61,13 @@ public class CurvePointServiceTest {
 	}
 
 	@Test
-	public void givenACurvePoint_whenAddCurvePoint_thenReturnCreatedCurvePoint() {
+	public void givenACurvePoint_whenUpdateCurvePoint_thenReturnUpdatedCurvePoint() {
 		// GIVEN
 		CurvePoint curvePoint1 = new CurvePoint(1, 15.2, 5.6);
 		when(curvePointRepository.save(curvePoint1)).thenReturn(curvePoint1);
 
 		// WHEN
-		CurvePoint result = curvePointService.addCurvePoint(curvePoint1);
+		CurvePoint result = curvePointService.updateCurvePoint(curvePoint1);
 
 		// THEN
 		verify(curvePointRepository, Mockito.times(1)).save(any(CurvePoint.class));
@@ -59,5 +75,4 @@ public class CurvePointServiceTest {
 		assertEquals(15.2, result.getTerm());
 		assertEquals(5.6, result.getValue());
 	}
-
 }

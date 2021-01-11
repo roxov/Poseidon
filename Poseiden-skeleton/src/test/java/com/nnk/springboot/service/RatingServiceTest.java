@@ -29,23 +29,6 @@ public class RatingServiceTest {
 	private RatingRepository ratingRepository;
 
 	@Test
-	public void givenAnOrderNumber_whenFindAllByOrderNumber_thenReturnListWithTheRating() {
-		// GIVEN
-		Rating rating = new Rating(1, "moodys", "sandP", "fitch", 1);
-		when(ratingRepository.findById(1)).thenReturn(Optional.of(rating));
-
-		// WHEN
-		Optional<Rating> result = ratingService.findById(1);
-
-		// THEN
-		verify(ratingRepository, Mockito.times(1)).findById(1);
-		assertEquals("moodys", result.get().getMoodysRating());
-		assertEquals("sandP", result.get().getSandPRating());
-		assertEquals("fitch", result.get().getFitchRating());
-		assertEquals(1, result.get().getOrderNumber());
-	}
-
-	@Test
 	public void givenARating_whenAddRating_thenReturnCreatedRating() {
 		// GIVEN
 		Rating rating = new Rating("moodys", "sandP", "fitch", 1);
@@ -62,4 +45,37 @@ public class RatingServiceTest {
 		assertEquals(1, result.getOrderNumber());
 	}
 
+	@Test
+	public void givenAnRating_whenFindById_thenReturnTheRating() {
+		// GIVEN
+		Rating rating = new Rating(1, "moodys", "sandP", "fitch", 1);
+		when(ratingRepository.findById(1)).thenReturn(Optional.of(rating));
+
+		// WHEN
+		Optional<Rating> result = ratingService.findById(1);
+
+		// THEN
+		verify(ratingRepository, Mockito.times(1)).findById(1);
+		assertEquals("moodys", result.get().getMoodysRating());
+		assertEquals("sandP", result.get().getSandPRating());
+		assertEquals("fitch", result.get().getFitchRating());
+		assertEquals(1, result.get().getOrderNumber());
+	}
+
+	@Test
+	public void givenARating_whenUpdateRating_thenReturnUpdatedRating() {
+		// GIVEN
+		Rating rating = new Rating("moodys", "sandP", "fitch", 1);
+		when(ratingRepository.save(rating)).thenReturn(rating);
+
+		// WHEN
+		Rating result = ratingService.updateRating(rating);
+
+		// THEN
+		verify(ratingRepository, Mockito.times(1)).save(any(Rating.class));
+		assertEquals("moodys", result.getMoodysRating());
+		assertEquals("sandP", result.getSandPRating());
+		assertEquals("fitch", result.getFitchRating());
+		assertEquals(1, result.getOrderNumber());
+	}
 }
