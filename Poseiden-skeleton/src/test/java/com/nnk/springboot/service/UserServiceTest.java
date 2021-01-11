@@ -1,9 +1,11 @@
-package com.nnk.springboot.restcontrollers;
+package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +20,9 @@ import com.nnk.springboot.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserRestControllerTest {
+public class UserServiceTest {
 	@Autowired
-	private UserRestController userRestController;
+	private UserService userService;
 
 	@MockBean
 	private UserRepository userRepository;
@@ -28,17 +30,17 @@ public class UserRestControllerTest {
 	@Test
 	public void givenAUserName_whenFindByUsername_thenReturnTheUser() {
 		// GIVEN
-		User user = new User("username", "password", "fullname", "role");
-		when(userRepository.findByUsername("username")).thenReturn(user);
+		User user = new User(1, "username", "password", "fullname", "role");
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
 		// WHEN
-		User result = userRestController.findByUserName("username");
+		Optional<User> result = userService.findById(1);
 
 		// THEN
 		verify(userRepository, Mockito.times(1)).findByUsername("username");
 		// TODO : password
-		assertEquals("fullname", result.getFullname());
-		assertEquals("role", result.getRole());
+		assertEquals("fullname", result.get().getFullname());
+		assertEquals("role", result.get().getRole());
 	}
 
 	@Test
@@ -48,7 +50,7 @@ public class UserRestControllerTest {
 		when(userRepository.save(user)).thenReturn(user);
 
 		// WHEN
-		User result = userRestController.addUser(user);
+		User result = userService.addUser(user);
 
 		// THEN
 		verify(userRepository, Mockito.times(1)).save(any(User.class));

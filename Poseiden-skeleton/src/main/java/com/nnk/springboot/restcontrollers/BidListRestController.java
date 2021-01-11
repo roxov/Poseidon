@@ -1,6 +1,6 @@
 package com.nnk.springboot.restcontrollers;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.service.BidListService;
 
 @RestController
 public class BidListRestController {
@@ -22,29 +22,29 @@ public class BidListRestController {
 	private static final Logger LOGGER = LogManager.getLogger(BidListRestController.class);
 
 	@Autowired
-	private BidListRepository bidListRepository;
+	private BidListService bidListService;
 
 	@GetMapping(value = "/bidList")
-	public List<BidList> findAllByAccount(@RequestParam String account) {
-		LOGGER.info("Getting bid list identified by account");
-		return bidListRepository.findAllByAccount(account);
+	public Optional<BidList> findById(@RequestParam Integer BidListId) {
+		LOGGER.info("Getting bid list identified by id");
+		return bidListService.findById(BidListId);
 	}
 
 	@PostMapping(value = "/bidList")
 	public BidList addBidList(@RequestBody BidList bidList) {
 		LOGGER.info("Adding new bid list");
-		return bidListRepository.save(bidList);
+		return bidListService.addBidList(bidList);
 	}
 
 	@PutMapping(value = "/bidList")
 	public BidList updateBidList(@RequestBody BidList bidList) {
 		LOGGER.info("Updating bid list");
-		return bidListRepository.save(bidList);
+		return bidListService.updateBidList(bidList);
 	}
 
 	@DeleteMapping(value = "/bidList")
-	public void deleteBidList(@RequestParam String account) {
+	public void deleteBidList(@RequestParam Integer BidListId) {
 		LOGGER.info("Deleting bid list");
-		bidListRepository.deleteByAccount(account);
+		bidListService.deleteBidList(BidListId);
 	}
 }

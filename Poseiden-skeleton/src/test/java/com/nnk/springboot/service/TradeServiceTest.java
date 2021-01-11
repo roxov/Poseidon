@@ -1,12 +1,11 @@
-package com.nnk.springboot.restcontrollers;
+package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +20,10 @@ import com.nnk.springboot.repositories.TradeRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TradeRestControllerTest {
+public class TradeServiceTest {
 
 	@Autowired
-	private TradeRestController tradeRestController;
+	private TradeService tradeService;
 
 	@MockBean
 	private TradeRepository tradeRepository;
@@ -32,17 +31,16 @@ public class TradeRestControllerTest {
 	@Test
 	public void givenAnAccount_whenFindAllByAccount_thenReturnListWithTheTrade() {
 		// GIVEN
-		Trade trade = new Trade("account", "type");
-		List<Trade> tradeList = new ArrayList<>();
-		tradeList.add(trade);
-		when(tradeRepository.findAllByAccount("account")).thenReturn(tradeList);
+		Trade trade = new Trade(1, "account", "type");
+		when(tradeRepository.findById(1)).thenReturn(Optional.of(trade));
 
 		// WHEN
-		List<Trade> result = tradeRestController.findAllByAccount("account");
+		Optional<Trade> result = tradeService.findById(1);
 
 		// THEN
 		verify(tradeRepository, Mockito.times(1)).findAllByAccount("account");
-		assertEquals("type", result.get(0).getType());
+		assertEquals("account", result.get().getAccount());
+		assertEquals("type", result.get().getType());
 	}
 
 	@Test
@@ -52,7 +50,7 @@ public class TradeRestControllerTest {
 		when(tradeRepository.save(trade)).thenReturn(trade);
 
 		// WHEN
-		Trade result = tradeRestController.addTrade(trade);
+		Trade result = tradeService.addTrade(trade);
 
 		// THEN
 		verify(tradeRepository, Mockito.times(1)).save(any(Trade.class));

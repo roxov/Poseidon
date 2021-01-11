@@ -1,12 +1,11 @@
-package com.nnk.springboot.restcontrollers;
+package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +20,10 @@ import com.nnk.springboot.repositories.RuleNameRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RuleNameRestControllerTest {
+public class RuleNameServiceTest {
 
 	@Autowired
-	private RuleNameRestController ruleNameRestController;
+	private RuleNameService ruleNameService;
 
 	@MockBean
 	private RuleNameRepository ruleNameRepository;
@@ -32,21 +31,20 @@ public class RuleNameRestControllerTest {
 	@Test
 	public void givenAName_whenFindAllByOrderNumber_thenReturnListWithTheRating() {
 		// GIVEN
-		RuleName ruleName = new RuleName("name", "description", "json", "template", "sqlStr", "sqlPart");
-		List<RuleName> ruleNameList = new ArrayList<>();
-		ruleNameList.add(ruleName);
-		when(ruleNameRepository.findAllByName("name")).thenReturn(ruleNameList);
+		RuleName ruleName = new RuleName(1, "name", "description", "json", "template", "sqlStr", "sqlPart");
+		when(ruleNameRepository.findById(1)).thenReturn(Optional.of(ruleName));
 
 		// WHEN
-		List<RuleName> result = ruleNameRestController.findAllByName("name");
+		Optional<RuleName> result = ruleNameService.findById(1);
 
 		// THEN
-		verify(ruleNameRepository, Mockito.times(1)).findAllByName("name");
-		assertEquals("description", result.get(0).getDescription());
-		assertEquals("json", result.get(0).getJson());
-		assertEquals("template", result.get(0).getTemplate());
-		assertEquals("sqlStr", result.get(0).getSqlStr());
-		assertEquals("sqlPart", result.get(0).getSqlPart());
+		verify(ruleNameRepository, Mockito.times(1)).findById(1);
+		assertEquals("name", result.get().getName());
+		assertEquals("description", result.get().getDescription());
+		assertEquals("json", result.get().getJson());
+		assertEquals("template", result.get().getTemplate());
+		assertEquals("sqlStr", result.get().getSqlStr());
+		assertEquals("sqlPart", result.get().getSqlPart());
 	}
 
 	@Test
@@ -56,7 +54,7 @@ public class RuleNameRestControllerTest {
 		when(ruleNameRepository.save(ruleName)).thenReturn(ruleName);
 
 		// WHEN
-		RuleName result = ruleNameRestController.addRuleName(ruleName);
+		RuleName result = ruleNameService.addRuleName(ruleName);
 
 		// THEN
 		verify(ruleNameRepository, Mockito.times(1)).save(any(RuleName.class));

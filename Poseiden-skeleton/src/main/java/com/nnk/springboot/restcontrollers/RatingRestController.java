@@ -1,6 +1,6 @@
 package com.nnk.springboot.restcontrollers;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,37 +14,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.service.RatingService;
 
 @RestController
 public class RatingRestController {
 	private static final Logger LOGGER = LogManager.getLogger(RatingRestController.class);
 
 	@Autowired
-	private RatingRepository ratingRepository;
+	private RatingService ratingService;
 
 	@GetMapping(value = "/rating")
-	public List<Rating> findAllByOrderNumber(@RequestParam Integer orderNumber) {
-		LOGGER.info("Getting rating identified by order number");
-		return ratingRepository.findAllByOrderNumber(orderNumber);
+	public Optional<Rating> findById(@RequestParam Integer id) {
+		LOGGER.info("Getting rating identified by id");
+		return ratingService.findById(id);
 	}
 
 	@PostMapping(value = "/rating")
 	public Rating addRating(@RequestBody Rating rating) {
 		LOGGER.info("Adding new rating");
-		return ratingRepository.save(rating);
+		return ratingService.addRating(rating);
 	}
 
 	@PutMapping(value = "/rating")
 	public Rating updateRating(@RequestBody Rating rating) {
 		LOGGER.info("Updating rating");
-		return ratingRepository.save(rating);
+		return ratingService.updateRating(rating);
 	}
 
 	@DeleteMapping(value = "/rating")
-	public void deleteRating(@RequestParam Integer orderNumber) {
+	public void deleteRating(@RequestParam Integer id) {
 		LOGGER.info("Deleting rating");
-		ratingRepository.deleteByOrderNumber(orderNumber);
+		ratingService.deleteRating(id);
 	}
 
 }

@@ -1,12 +1,11 @@
-package com.nnk.springboot.restcontrollers;
+package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +20,10 @@ import com.nnk.springboot.repositories.RatingRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RatingRestControllerTest {
+public class RatingServiceTest {
 
 	@Autowired
-	private RatingRestController ratingRestController;
+	private RatingService ratingService;
 
 	@MockBean
 	private RatingRepository ratingRepository;
@@ -32,19 +31,18 @@ public class RatingRestControllerTest {
 	@Test
 	public void givenAnOrderNumber_whenFindAllByOrderNumber_thenReturnListWithTheRating() {
 		// GIVEN
-		Rating rating = new Rating("moodys", "sandP", "fitch", 1);
-		List<Rating> ratingList = new ArrayList<>();
-		ratingList.add(rating);
-		when(ratingRepository.findAllByOrderNumber(1)).thenReturn(ratingList);
+		Rating rating = new Rating(1, "moodys", "sandP", "fitch", 1);
+		when(ratingRepository.findById(1)).thenReturn(Optional.of(rating));
 
 		// WHEN
-		List<Rating> result = ratingRestController.findAllByOrderNumber(1);
+		Optional<Rating> result = ratingService.findById(1);
 
 		// THEN
-		verify(ratingRepository, Mockito.times(1)).findAllByOrderNumber(1);
-		assertEquals("moodys", result.get(0).getMoodysRating());
-		assertEquals("sandP", result.get(0).getSandPRating());
-		assertEquals("fitch", result.get(0).getFitchRating());
+		verify(ratingRepository, Mockito.times(1)).findById(1);
+		assertEquals("moodys", result.get().getMoodysRating());
+		assertEquals("sandP", result.get().getSandPRating());
+		assertEquals("fitch", result.get().getFitchRating());
+		assertEquals(1, result.get().getOrderNumber());
 	}
 
 	@Test
@@ -54,7 +52,7 @@ public class RatingRestControllerTest {
 		when(ratingRepository.save(rating)).thenReturn(rating);
 
 		// WHEN
-		Rating result = ratingRestController.addRating(rating);
+		Rating result = ratingService.addRating(rating);
 
 		// THEN
 		verify(ratingRepository, Mockito.times(1)).save(any(Rating.class));

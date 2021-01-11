@@ -1,6 +1,6 @@
 package com.nnk.springboot.restcontrollers;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,36 +14,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.service.TradeService;
 
 @RestController
 public class TradeRestController {
-	private static final Logger LOGGER = LogManager.getLogger(RatingRestController.class);
+	private static final Logger LOGGER = LogManager.getLogger(TradeRestController.class);
 
 	@Autowired
-	private TradeRepository tradeRepository;
+	private TradeService tradeService;
 
 	@GetMapping(value = "/trade")
-	public List<Trade> findAllByAccount(@RequestParam String account) {
-		LOGGER.info("Getting trade identified by account");
-		return tradeRepository.findAllByAccount(account);
+	public Optional<Trade> findById(@RequestParam Integer tradeId) {
+		LOGGER.info("Getting trade identified by id");
+		return tradeService.findById(tradeId);
 	}
 
 	@PostMapping(value = "/trade")
 	public Trade addTrade(@RequestBody Trade trade) {
 		LOGGER.info("Adding new trade");
-		return tradeRepository.save(trade);
+		return tradeService.addTrade(trade);
 	}
 
 	@PutMapping(value = "/trade")
 	public Trade updateTrade(@RequestBody Trade trade) {
 		LOGGER.info("Updating trade");
-		return tradeRepository.save(trade);
+		return tradeService.updateTrade(trade);
 	}
 
 	@DeleteMapping(value = "/trade")
-	public void deleteTrade(@RequestParam String account) {
+	public void deleteTrade(@RequestParam Integer tradeId) {
 		LOGGER.info("Deleting trade");
-		tradeRepository.deleteByAccount(account);
+		tradeService.deleteTrade(tradeId);
 	}
 }

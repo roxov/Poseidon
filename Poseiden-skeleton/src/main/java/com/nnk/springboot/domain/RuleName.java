@@ -33,6 +33,18 @@ public class RuleName {
 		this.sqlPart = sqlPart;
 	}
 
+	public RuleName(Integer id, String name, String description, String json, String template, String sqlStr,
+			String sqlPart) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.json = json;
+		this.template = template;
+		this.sqlStr = sqlStr;
+		this.sqlPart = sqlPart;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

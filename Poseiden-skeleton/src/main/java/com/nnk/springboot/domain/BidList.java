@@ -40,6 +40,14 @@ public class BidList {
 		super();
 	}
 
+	public BidList(Integer bidListId, String account, String type, Double bidQuantity) {
+		super();
+		BidListId = bidListId;
+		this.account = account;
+		this.type = type;
+		this.bidQuantity = bidQuantity;
+	}
+
 	public BidList(String account, String type, Double bidQuantity) {
 		super();
 		this.account = account;

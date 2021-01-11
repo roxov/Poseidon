@@ -1,12 +1,11 @@
-package com.nnk.springboot.restcontrollers;
+package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,29 +20,28 @@ import com.nnk.springboot.repositories.CurvePointRepository;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class CurvePointRestControllerTest {
+public class CurvePointServiceTest {
 
 	@Autowired
-	private CurvePointRestController curvePointRestController;
+	private CurvePointService curvePointService;
 
 	@MockBean
 	private CurvePointRepository curvePointRepository;
 
 	@Test
-	public void givenACurveId_whenFindAllByCurveId_thenReturnListWithTheCurvePoint() {
+	public void givenACurvePoint_whenFindById_thenReturnTheCurvePoint() {
 		// GIVEN
-		CurvePoint curvePoint = new CurvePoint(1, 15.2, 5.6);
-		List<CurvePoint> curvePointList = new ArrayList<>();
-		curvePointList.add(curvePoint);
-		when(curvePointRepository.findAllByCurveId(1)).thenReturn(curvePointList);
+		CurvePoint curvePoint = new CurvePoint(1, 2, 15.2, 5.6);
+		when(curvePointRepository.findById(1)).thenReturn(Optional.of(curvePoint));
 
 		// WHEN
-		List<CurvePoint> result = curvePointRestController.findAllByCurveId(1);
+		Optional<CurvePoint> result = curvePointService.findById(1);
 
 		// THEN
-		verify(curvePointRepository, Mockito.times(1)).findAllByCurveId(1);
-		assertEquals(15.2, result.get(0).getTerm());
-		assertEquals(5.6, result.get(0).getValue());
+		verify(curvePointRepository, Mockito.times(1)).findById(1);
+		assertEquals(2, result.get().getCurveId());
+		assertEquals(15.2, result.get().getTerm());
+		assertEquals(5.6, result.get().getValue());
 	}
 
 	@Test
@@ -53,7 +51,7 @@ public class CurvePointRestControllerTest {
 		when(curvePointRepository.save(curvePoint1)).thenReturn(curvePoint1);
 
 		// WHEN
-		CurvePoint result = curvePointRestController.addCurvePoint(curvePoint1);
+		CurvePoint result = curvePointService.addCurvePoint(curvePoint1);
 
 		// THEN
 		verify(curvePointRepository, Mockito.times(1)).save(any(CurvePoint.class));

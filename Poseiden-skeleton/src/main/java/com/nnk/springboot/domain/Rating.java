@@ -29,6 +29,15 @@ public class Rating {
 		this.orderNumber = orderNumber;
 	}
 
+	public Rating(Integer id, String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
+		super();
+		this.id = id;
+		this.moodysRating = moodysRating;
+		this.sandPRating = sandPRating;
+		this.fitchRating = fitchRating;
+		this.orderNumber = orderNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

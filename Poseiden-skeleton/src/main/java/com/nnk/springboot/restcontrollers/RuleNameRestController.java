@@ -1,6 +1,6 @@
 package com.nnk.springboot.restcontrollers;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,37 +14,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.service.RuleNameService;
 
 @RestController
 public class RuleNameRestController {
 	private static final Logger LOGGER = LogManager.getLogger(RuleNameRestController.class);
 
 	@Autowired
-	private RuleNameRepository ruleNameRepository;
+	private RuleNameService ruleNameService;
 
 	@GetMapping(value = "/ruleName")
-	public List<RuleName> findAllByName(@RequestParam String name) {
-		LOGGER.info("Getting rule name identified by name");
-		return ruleNameRepository.findAllByName(name);
+	public Optional<RuleName> findById(@RequestParam Integer id) {
+		LOGGER.info("Getting rule name identified by id");
+		return ruleNameService.findById(id);
 	}
 
 	@PostMapping(value = "/ruleName")
 	public RuleName addRuleName(@RequestBody RuleName ruleName) {
 		LOGGER.info("Adding new rule name");
-		return ruleNameRepository.save(ruleName);
+		return ruleNameService.addRuleName(ruleName);
 	}
 
 	@PutMapping(value = "/ruleName")
 	public RuleName updateRuleName(@RequestBody RuleName ruleName) {
 		LOGGER.info("Updating rule name");
-		return ruleNameRepository.save(ruleName);
+		return ruleNameService.updateRuleName(ruleName);
 	}
 
 	@DeleteMapping(value = "/ruleName")
-	public void deleteRuleName(@RequestParam String name) {
+	public void deleteRuleName(@RequestParam Integer id) {
 		LOGGER.info("Deleting rule name");
-		ruleNameRepository.deleteByName(name);
+		ruleNameService.deleteRuleName(id);
 	}
 
 }
