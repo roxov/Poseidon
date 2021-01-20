@@ -24,27 +24,46 @@ public class BidListRestController {
 	@Autowired
 	private BidListService bidListService;
 
-	@GetMapping(value = "/bidList")
-	public Optional<BidList> findById(@RequestParam Integer BidListId) {
-		LOGGER.info("Getting bid list identified by id");
-		return bidListService.findById(BidListId);
+	@PostMapping(value = "/bidList")
+	public Optional<BidList> addBidList(@RequestBody BidList bidList) {
+		if (bidList.getAccount() == null || bidList.getType() == null) {
+			LOGGER.error("There are missing mandatory fields.");
+			return Optional.empty();
+		}
+
+		LOGGER.info("Adding new bid list");
+		return Optional.of(bidListService.addBidList(bidList));
 	}
 
-	@PostMapping(value = "/bidList")
-	public BidList addBidList(@RequestBody BidList bidList) {
-		LOGGER.info("Adding new bid list");
-		return bidListService.addBidList(bidList);
+	@GetMapping(value = "/bidList")
+	public Optional<BidList> findById(@RequestParam Integer bidListId) {
+
+		if (bidListId == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
+
+		LOGGER.info("Getting bid list identified by id");
+		return bidListService.findById(bidListId);
 	}
 
 	@PutMapping(value = "/bidList")
-	public BidList updateBidList(@RequestBody BidList bidList) {
+	public Optional<BidList> updateBidList(@RequestBody BidList bidList) {
+		if (bidList.getBidListId() == null) {
+			LOGGER.error("There are missing mandatory fields.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating bid list");
-		return bidListService.updateBidList(bidList);
+		return Optional.of(bidListService.updateBidList(bidList));
 	}
 
 	@DeleteMapping(value = "/bidList")
 	public void deleteBidList(@RequestParam Integer BidListId) {
-		LOGGER.info("Deleting bid list");
-		bidListService.deleteBidList(BidListId);
+		if (BidListId == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting bid list");
+			bidListService.deleteBidList(BidListId);
+		}
 	}
 }

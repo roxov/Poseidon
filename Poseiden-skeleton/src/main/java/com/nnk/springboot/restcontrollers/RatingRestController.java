@@ -23,28 +23,40 @@ public class RatingRestController {
 	@Autowired
 	private RatingService ratingService;
 
+	@PostMapping(value = "/rating")
+	public Optional<Rating> addRating(@RequestBody Rating rating) {
+		LOGGER.info("Adding new rating");
+		return Optional.of(ratingService.addRating(rating));
+	}
+
 	@GetMapping(value = "/rating")
 	public Optional<Rating> findById(@RequestParam Integer id) {
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
 		LOGGER.info("Getting rating identified by id");
 		return ratingService.findById(id);
 	}
 
-	@PostMapping(value = "/rating")
-	public Rating addRating(@RequestBody Rating rating) {
-		LOGGER.info("Adding new rating");
-		return ratingService.addRating(rating);
-	}
-
 	@PutMapping(value = "/rating")
-	public Rating updateRating(@RequestBody Rating rating) {
+	public Optional<Rating> updateRating(@RequestBody Rating rating) {
+		if (rating.getId() == null) {
+			LOGGER.error("The id is mandatory.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating rating");
-		return ratingService.updateRating(rating);
+		return Optional.of(ratingService.updateRating(rating));
 	}
 
 	@DeleteMapping(value = "/rating")
 	public void deleteRating(@RequestParam Integer id) {
-		LOGGER.info("Deleting rating");
-		ratingService.deleteRating(id);
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting rating");
+			ratingService.deleteRating(id);
+		}
 	}
 
 }

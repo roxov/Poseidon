@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.UserService;
+import com.nnk.springboot.util.RegexValidator;
 
 @RestController
 public class UserRestController {
@@ -23,27 +24,44 @@ public class UserRestController {
 	@Autowired
 	private UserService userService;
 
+	@PostMapping(value = "/user")
+	public Optional<User> addUser(@RequestBody User user) {
+		if (RegexValidator.validatePassword(user.getPassword())) {
+			LOGGER.info("Adding new user");
+			return Optional.of(userService.addUser(user));
+		} else {
+			LOGGER.error("The password must contain 8 characters, 1 capital, 1 number and 1 special character ");
+			return Optional.empty();
+		}
+	}
+
 	@GetMapping(value = "/user")
 	public Optional<User> findById(@RequestParam Integer id) {
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
 		LOGGER.info("Getting user identified by id");
 		return userService.findById(id);
 	}
 
-	@PostMapping(value = "/user")
-	public User addUser(@RequestBody User user) {
-		LOGGER.info("Adding new user");
-		return userService.addUser(user);
-	}
-
 	@PutMapping(value = "/user")
-	public User updateUser(@RequestBody User user) {
+	public Optional<User> updateUser(@RequestBody User user) {
+		if (user.getId() == null) {
+			LOGGER.error("The id is mandatory.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating user");
-		return userService.updateUser(user);
+		return Optional.of(userService.updateUser(user));
 	}
 
 	@DeleteMapping(value = "/user")
 	public void deleteUser(@RequestParam Integer id) {
-		LOGGER.info("Deleting user");
-		userService.deleteUser(id);
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting user");
+			userService.deleteUser(id);
+		}
 	}
 }

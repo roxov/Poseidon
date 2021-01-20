@@ -23,27 +23,43 @@ public class TradeRestController {
 	@Autowired
 	private TradeService tradeService;
 
+	@PostMapping(value = "/trade")
+	public Optional<Trade> addTrade(@RequestBody Trade trade) {
+		if (trade.getAccount() == null || trade.getType() == null) {
+			LOGGER.error("There are missing mandatory fields.");
+			return Optional.empty();
+		}
+		LOGGER.info("Adding new trade");
+		return Optional.of(tradeService.addTrade(trade));
+	}
+
 	@GetMapping(value = "/trade")
 	public Optional<Trade> findById(@RequestParam Integer tradeId) {
+		if (tradeId == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
 		LOGGER.info("Getting trade identified by id");
 		return tradeService.findById(tradeId);
 	}
 
-	@PostMapping(value = "/trade")
-	public Trade addTrade(@RequestBody Trade trade) {
-		LOGGER.info("Adding new trade");
-		return tradeService.addTrade(trade);
-	}
-
 	@PutMapping(value = "/trade")
-	public Trade updateTrade(@RequestBody Trade trade) {
+	public Optional<Trade> updateTrade(@RequestBody Trade trade) {
+		if (trade.getTradeId() == null || trade.getAccount() == null || trade.getType() == null) {
+			LOGGER.error("There are missing mandatory fields.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating trade");
-		return tradeService.updateTrade(trade);
+		return Optional.of(tradeService.updateTrade(trade));
 	}
 
 	@DeleteMapping(value = "/trade")
 	public void deleteTrade(@RequestParam Integer tradeId) {
-		LOGGER.info("Deleting trade");
-		tradeService.deleteTrade(tradeId);
+		if (tradeId == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting trade");
+			tradeService.deleteTrade(tradeId);
+		}
 	}
 }

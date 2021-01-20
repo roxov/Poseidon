@@ -23,28 +23,40 @@ public class RuleNameRestController {
 	@Autowired
 	private RuleNameService ruleNameService;
 
+	@PostMapping(value = "/ruleName")
+	public Optional<RuleName> addRuleName(@RequestBody RuleName ruleName) {
+		LOGGER.info("Adding new rule name");
+		return Optional.of(ruleNameService.addRuleName(ruleName));
+	}
+
 	@GetMapping(value = "/ruleName")
 	public Optional<RuleName> findById(@RequestParam Integer id) {
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
 		LOGGER.info("Getting rule name identified by id");
 		return ruleNameService.findById(id);
 	}
 
-	@PostMapping(value = "/ruleName")
-	public RuleName addRuleName(@RequestBody RuleName ruleName) {
-		LOGGER.info("Adding new rule name");
-		return ruleNameService.addRuleName(ruleName);
-	}
-
 	@PutMapping(value = "/ruleName")
-	public RuleName updateRuleName(@RequestBody RuleName ruleName) {
+	public Optional<RuleName> updateRuleName(@RequestBody RuleName ruleName) {
+		if (ruleName.getId() == null) {
+			LOGGER.error("The id is mandatory.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating rule name");
-		return ruleNameService.updateRuleName(ruleName);
+		return Optional.of(ruleNameService.updateRuleName(ruleName));
 	}
 
 	@DeleteMapping(value = "/ruleName")
 	public void deleteRuleName(@RequestParam Integer id) {
-		LOGGER.info("Deleting rule name");
-		ruleNameService.deleteRuleName(id);
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting rule name");
+			ruleNameService.deleteRuleName(id);
+		}
 	}
 
 }

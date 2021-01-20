@@ -23,28 +23,40 @@ public class CurvePointRestController {
 	@Autowired
 	private CurvePointService curvePointService;
 
+	@PostMapping(value = "/curvePoint")
+	public Optional<CurvePoint> addCurvePoint(@RequestBody CurvePoint curvePoint) {
+		LOGGER.info("Adding new curve point");
+		return Optional.of(curvePointService.addCurvePoint(curvePoint));
+	}
+
 	@GetMapping(value = "/curvePoint")
 	public Optional<CurvePoint> findById(@RequestParam Integer id) {
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+			return Optional.empty();
+		}
 		LOGGER.info("Getting curve points identified by id");
 		return curvePointService.findById(id);
 	}
 
-	@PostMapping(value = "/curvePoint")
-	public CurvePoint addCurvePoint(@RequestBody CurvePoint curvePoint) {
-		LOGGER.info("Adding new curve point");
-		return curvePointService.addCurvePoint(curvePoint);
-	}
-
 	@PutMapping(value = "/curvePoint")
-	public CurvePoint updateCurvePoint(@RequestBody CurvePoint curvePoint) {
+	public Optional<CurvePoint> updateCurvePoint(@RequestBody CurvePoint curvePoint) {
+		if (curvePoint.getId() == null) {
+			LOGGER.error("The id is mandatory.");
+			return Optional.empty();
+		}
 		LOGGER.info("Updating curve point");
-		return curvePointService.updateCurvePoint(curvePoint);
+		return Optional.of(curvePointService.updateCurvePoint(curvePoint));
 	}
 
 	@DeleteMapping(value = "/curvePoint")
 	public void deleteCurvePoint(@RequestParam Integer id) {
-		LOGGER.info("Deleting curve point");
-		curvePointService.deleteCurvePoint(id);
+		if (id == null) {
+			LOGGER.error("The id must be fielded.");
+		} else {
+			LOGGER.info("Deleting curve point");
+			curvePointService.deleteCurvePoint(id);
+		}
 	}
 
 }
