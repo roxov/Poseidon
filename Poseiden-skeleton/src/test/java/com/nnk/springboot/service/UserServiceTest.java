@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,4 +75,17 @@ public class UserServiceTest {
 		assertEquals("fullname", result.getFullname());
 		assertEquals("role", result.getRole());
 	}
+
+	@Test
+	public void givenAUser_whenDeleteUser_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(userRepository).deleteById(1);
+
+		// WHEN
+		userService.deleteUser(1);
+
+		// THEN
+		verify(userRepository, Mockito.times(1)).deleteById(any(Integer.class));
+	}
+
 }

@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -71,5 +72,17 @@ public class TradeServiceTest {
 		verify(tradeRepository, Mockito.times(1)).save(any(Trade.class));
 		assertEquals("account", result.getAccount());
 		assertEquals("type", result.getType());
+	}
+
+	@Test
+	public void givenATrade_whenDeleteTrade_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(tradeRepository).deleteById(1);
+
+		// WHEN
+		tradeService.deleteTrade(1);
+
+		// THEN
+		verify(tradeRepository, Mockito.times(1)).deleteById(any(Integer.class));
 	}
 }

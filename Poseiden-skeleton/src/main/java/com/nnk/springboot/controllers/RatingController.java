@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.service.RatingService;
 
 @Controller
 public class RatingController {
 	@Autowired
 	private RatingRepository ratingRepository;
+
+	@Autowired
+	private RatingService ratingService;
 
 	@RequestMapping("/rating/list")
 	public String home(Model model) {
@@ -33,7 +37,7 @@ public class RatingController {
 	@PostMapping("/rating/validate")
 	public String validate(@Valid Rating rating, BindingResult result, Model model) {
 		if (!result.hasErrors()) {
-			ratingRepository.save(rating);
+			ratingService.addRating(rating);
 			model.addAttribute("ratings", ratingRepository.findAll());
 			return "redirect:/rating/list";
 		}
@@ -56,16 +60,15 @@ public class RatingController {
 		}
 
 		rating.setId(id);
-		ratingRepository.save(rating);
+		ratingService.addRating(rating);
 		model.addAttribute("ratings", ratingRepository.findAll());
 		return "redirect:/rating/list";
 	}
 
 	@GetMapping("/rating/delete/{id}")
 	public String deleteRating(@PathVariable("id") Integer id, Model model) {
-		Rating rating = ratingRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
-		ratingRepository.delete(rating);
+		ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+		ratingService.deleteRating(id);
 		model.addAttribute("ratings", ratingRepository.findAll());
 		return "redirect:/rating/list";
 	}

@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
+import com.nnk.springboot.service.CurvePointService;
 
 @Controller
 public class CurveController {
 	@Autowired
 	private CurvePointRepository curvePointRepository;
+
+	@Autowired
+	private CurvePointService curvePointService;
 
 	@RequestMapping("/curvePoint/list")
 	public String home(Model model) {
@@ -33,7 +37,7 @@ public class CurveController {
 	@PostMapping("/curvePoint/validate")
 	public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
 		if (!result.hasErrors()) {
-			curvePointRepository.save(curvePoint);
+			curvePointService.addCurvePoint(curvePoint);
 			model.addAttribute("curvePoints", curvePointRepository.findAll());
 			return "redirect:/curvePoint/list";
 		}
@@ -56,16 +60,16 @@ public class CurveController {
 		}
 
 		curvePoint.setId(id);
-		curvePointRepository.save(curvePoint);
+		curvePointService.addCurvePoint(curvePoint);
 		model.addAttribute("curvePoints", curvePointRepository.findAll());
 		return "redirect:/curvePoint/list";
 	}
 
 	@GetMapping("/curvePoint/delete/{id}")
 	public String deleteBid(@PathVariable("id") Integer id, Model model) {
-		CurvePoint curvePoint = curvePointRepository.findById(id)
+		curvePointRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid curve point Id:" + id));
-		curvePointRepository.delete(curvePoint);
+		curvePointService.deleteCurvePoint(id);
 		model.addAttribute("curvePoints", curvePointRepository.findAll());
 		return "redirect:/curvePoint/list";
 	}

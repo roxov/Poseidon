@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.service.BidListService;
 
 @Controller
 public class BidListController {
 	@Autowired
 	private BidListRepository bidListRepository;
+
+	@Autowired
+	private BidListService bidListService;
 
 	@RequestMapping("/bidList/list")
 	public String home(Model model) {
@@ -33,7 +37,7 @@ public class BidListController {
 	@PostMapping("/bidList/validate")
 	public String validate(@Valid BidList bid, BindingResult result, Model model) {
 		if (!result.hasErrors()) {
-			bidListRepository.save(bid);
+			bidListService.addBidList(bid);
 			model.addAttribute("bidList", bidListRepository.findAll());
 			return "redirect:/bidList/list";
 		}
@@ -55,16 +59,15 @@ public class BidListController {
 		}
 
 		bidList.setBidListId(id);
-		bidListRepository.save(bidList);
+		bidListService.addBidList(bidList);
 		model.addAttribute("bidList", bidListRepository.findAll());
 		return "redirect:/bidList/list";
 	}
 
 	@GetMapping("/bidList/delete/{id}")
 	public String deleteBid(@PathVariable("id") Integer id, Model model) {
-		BidList bidList = bidListRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
-		bidListRepository.delete(bidList);
+		bidListRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+		bidListService.deleteBidList(id);
 		model.addAttribute("bidList", bidListRepository.findAll());
 		return "redirect:/bidList/list";
 	}

@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +75,18 @@ public class BidListServiceTest {
 		assertEquals("account", result.getAccount());
 		assertEquals("type", result.getType());
 		assertEquals(2.2, result.getBidQuantity());
+	}
+
+	@Test
+	public void givenABidList_whenDeleteBidList_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(bidListRepository).deleteById(1);
+
+		// WHEN
+		bidListService.deleteBidList(1);
+
+		// THEN
+		verify(bidListRepository, Mockito.times(1)).deleteById(any(Integer.class));
 	}
 
 }

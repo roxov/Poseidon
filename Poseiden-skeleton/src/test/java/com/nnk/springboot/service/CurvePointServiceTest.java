@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,5 +75,17 @@ public class CurvePointServiceTest {
 		assertEquals(1, result.getCurveId());
 		assertEquals(15.2, result.getTerm());
 		assertEquals(5.6, result.getValue());
+	}
+
+	@Test
+	public void givenACurvePoint_whenDeleteCurvePoint_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(curvePointRepository).deleteById(1);
+
+		// WHEN
+		curvePointService.deleteCurvePoint(1);
+
+		// THEN
+		verify(curvePointRepository, Mockito.times(1)).deleteById(any(Integer.class));
 	}
 }

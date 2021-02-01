@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.service.TradeService;
 
 @Controller
 public class TradeController {
 	@Autowired
 	private TradeRepository tradeRepository;
+
+	@Autowired
+	private TradeService tradeService;
 
 	@RequestMapping("/trade/list")
 	public String home(Model model) {
@@ -33,7 +37,7 @@ public class TradeController {
 	@PostMapping("/trade/validate")
 	public String validate(@Valid Trade trade, BindingResult result, Model model) {
 		if (!result.hasErrors()) {
-			tradeRepository.save(trade);
+			tradeService.addTrade(trade);
 			model.addAttribute("trades", tradeRepository.findAll());
 			return "redirect:/trade/list";
 		}
@@ -55,16 +59,15 @@ public class TradeController {
 		}
 
 		trade.setTradeId(id);
-		tradeRepository.save(trade);
+		tradeService.addTrade(trade);
 		model.addAttribute("trades", tradeRepository.findAll());
 		return "redirect:/trade/list";
 	}
 
 	@GetMapping("/trade/delete/{id}")
 	public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-		Trade trade = tradeRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-		tradeRepository.delete(trade);
+		tradeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+		tradeService.deleteTrade(id);
 		model.addAttribute("trades", tradeRepository.findAll());
 		return "redirect:/trade/list";
 	}

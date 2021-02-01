@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -83,5 +84,17 @@ public class RuleNameServiceTest {
 		assertEquals("template", result.getTemplate());
 		assertEquals("sqlStr", result.getSqlStr());
 		assertEquals("sqlPart", result.getSqlPart());
+	}
+
+	@Test
+	public void givenARuleName_whenDeleteRuleName_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(ruleNameRepository).deleteById(1);
+
+		// WHEN
+		ruleNameService.deleteRuleName(1);
+
+		// THEN
+		verify(ruleNameRepository, Mockito.times(1)).deleteById(any(Integer.class));
 	}
 }

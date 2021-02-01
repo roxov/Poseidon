@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,5 +78,17 @@ public class RatingServiceTest {
 		assertEquals("sandP", result.getSandPRating());
 		assertEquals("fitch", result.getFitchRating());
 		assertEquals(1, result.getOrderNumber());
+	}
+
+	@Test
+	public void givenARating_whenDeleteRating_thenVerifyMethodCalled() {
+		// GIVEN
+		doNothing().when(ratingRepository).deleteById(1);
+
+		// WHEN
+		ratingService.deleteRating(1);
+
+		// THEN
+		verify(ratingRepository, Mockito.times(1)).deleteById(any(Integer.class));
 	}
 }

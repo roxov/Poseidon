@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.service.RuleNameService;
 
 @Controller
 public class RuleNameController {
 	@Autowired
 	private RuleNameRepository ruleNameRepository;
+
+	@Autowired
+	private RuleNameService ruleNameService;
 
 	@RequestMapping("/ruleName/list")
 	public String home(Model model) {
@@ -33,7 +37,7 @@ public class RuleNameController {
 	@PostMapping("/ruleName/validate")
 	public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
 		if (!result.hasErrors()) {
-			ruleNameRepository.save(ruleName);
+			ruleNameService.addRuleName(ruleName);
 			model.addAttribute("ruleNames", ruleNameRepository.findAll());
 			return "redirect:/ruleName/list";
 		}
@@ -56,16 +60,15 @@ public class RuleNameController {
 		}
 
 		ruleName.setId(id);
-		ruleNameRepository.save(ruleName);
+		ruleNameService.addRuleName(ruleName);
 		model.addAttribute("ruleNames", ruleNameRepository.findAll());
 		return "redirect:/ruleName/list";
 	}
 
 	@GetMapping("/ruleName/delete/{id}")
 	public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-		RuleName ruleName = ruleNameRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
-		ruleNameRepository.delete(ruleName);
+		ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+		ruleNameService.deleteRuleName(id);
 		model.addAttribute("ruleNames", ruleNameRepository.findAll());
 		return "redirect:/ruleName/list";
 	}

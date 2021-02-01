@@ -55,22 +55,4 @@ public class RegexValidatorTest {
 		assertFalse(result);
 	}
 
-	@Test
-	public void givenAStringWithOnlyNumbers_whenValidateNumber_thenReturnTrue() {
-		// WHEN
-		boolean result = RegexValidator.validateNumber("123456");
-
-		// THEN
-		assertTrue(result);
-	}
-
-	@Test
-	public void givenAStringWithACharacter_whenValidateNumber_thenReturnFalse() {
-		// WHEN
-		boolean result = RegexValidator.validateNumber("P123456");
-
-		// THEN
-		assertFalse(result);
-	}
-
 }
