@@ -1,12 +1,14 @@
 package com.nnk.springboot.restcontrollers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,6 +36,7 @@ public class UserRestControllerTest {
 		Optional<User> result = userRestController.addUser(user);
 
 		// THEN
+		verify(userService, Mockito.times(1)).addUser(user);
 		assertEquals("fullname", result.get().getFullname());
 	}
 
@@ -43,6 +46,7 @@ public class UserRestControllerTest {
 		Optional<User> result = userRestController.findById(null);
 
 		// THEN
+		verify(userService, Mockito.times(0)).findById(null);
 		assertEquals(Optional.empty(), result);
 	}
 
@@ -55,6 +59,7 @@ public class UserRestControllerTest {
 		Optional<User> result = userRestController.updateUser(user);
 
 		// THEN
+		verify(userService, Mockito.times(0)).updateUser(user);
 		assertEquals(Optional.empty(), result);
 	}
 }
