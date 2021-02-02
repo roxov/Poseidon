@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.nnk.springboot.repositories.UserRepository;
@@ -28,18 +28,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// utilisateur temporaire à la place de la DB
-		// auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
-		// auth.inMemoryAuthentication().withUser("user").password(passwordEncoder().encode("password")).roles("USER");
 		auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/user/**").hasRole("ADMIN").antMatchers("/", "/home", "/error")
-				.permitAll().antMatchers("/login*").permitAll().anyRequest().authenticated().and().formLogin()
-				.defaultSuccessUrl("/bidList/list").and().logout().logoutUrl("/app-logout").logoutSuccessUrl("/").and()
-				.httpBasic();
+		http.authorizeRequests().antMatchers("/user/**", "/rest/user/**").hasRole("ADMIN")
+				.antMatchers("/", "/home", "/error", "/rest/", "/rest/error/").permitAll()
+				.antMatchers("/login*", "/rest/login*").permitAll().anyRequest().authenticated().and().formLogin()
+				.defaultSuccessUrl("/bidList/list").and().exceptionHandling().accessDeniedPage("/error").and().logout()
+				.logoutUrl("/app-logout").logoutSuccessUrl("/").and().httpBasic();
 	}
 
 	@Bean
@@ -57,19 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		// return new BCryptPasswordEncoder();
-		return NoOpPasswordEncoder.getInstance();
+		return new BCryptPasswordEncoder();
+		// return NoOpPasswordEncoder.getInstance();
 	}
-//	and().formLogin()
-//	.loginPage("/login").loginProcessingUrl("/perform_login").defaultSuccessUrl("/home", true)
-//	.failureUrl("/error");
-//defaultsucces : page après une authentification réussie, renvoyer la page souhaitée ? en xml always-use-default-target doit être false
 
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//
-//		http.authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest().authenticated().and().formLogin()
-//				.loginPage("/login").usernameParameter("username").passwordParameter("password").and()
-//				.exceptionHandling().accessDeniedPage("/403");
-//	}
 }

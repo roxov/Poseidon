@@ -10,14 +10,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.service.RuleNameService;
 
+/**
+ * Rest controller for RuleName entities.
+ *
+ */
 @RestController
+@RequestMapping("rest")
 public class RuleNameRestController {
+
 	private static final Logger LOGGER = LogManager.getLogger(RuleNameRestController.class);
 
 	@Autowired

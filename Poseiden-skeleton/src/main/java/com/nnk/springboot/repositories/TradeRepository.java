@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.nnk.springboot.domain.Trade;
 
+/**
+ * Repository pattern for Trade entities.
+ *
+ */
 public interface TradeRepository extends JpaRepository<Trade, Integer> {
 	List<Trade> findAllByAccount(String account);
 

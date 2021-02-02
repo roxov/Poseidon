@@ -9,5 +9,11 @@
 <p>
     <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
 </p>
+<div class="row">
+	Logged in user: <b th:inline="text"  class="user"> [[${#httpServletRequest.remoteUser}]] </b>
+	<form th:action="@{/app-logout}" method="POST">
+		<input type="submit" value="Logout"/>
+	</form>
+</div>
 </body>
 </html>

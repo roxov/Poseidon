@@ -8,6 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.nnk.springboot.domain.User;
 
+/**
+ * Repository pattern for User entities.
+ *
+ */
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 	User findByUsername(String username);
 

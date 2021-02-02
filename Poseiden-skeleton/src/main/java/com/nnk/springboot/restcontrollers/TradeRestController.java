@@ -10,14 +10,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.service.TradeService;
 
+/**
+ * Rest controller for Trade entities.
+ *
+ */
 @RestController
+@RequestMapping("rest")
 public class TradeRestController {
+
 	private static final Logger LOGGER = LogManager.getLogger(TradeRestController.class);
 
 	@Autowired

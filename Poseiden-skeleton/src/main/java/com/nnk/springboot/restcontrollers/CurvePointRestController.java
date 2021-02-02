@@ -10,14 +10,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.CurvePointService;
 
+/**
+ * Rest controller for CurvePoint entities.
+ *
+ */
+
 @RestController
+@RequestMapping("rest")
 public class CurvePointRestController {
+
 	private static final Logger LOGGER = LogManager.getLogger(CurvePointRestController.class);
 
 	@Autowired
