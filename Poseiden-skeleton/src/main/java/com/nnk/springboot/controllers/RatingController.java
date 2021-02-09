@@ -35,7 +35,7 @@ public class RatingController {
 	@RequestMapping("/rating/list")
 	public String home(Model model) {
 		LOGGER.info("Getting the ratings list");
-		model.addAttribute("ratings", ratingRepository.findAll());
+		model.addAttribute("rating", ratingRepository.findAll());
 		return "rating/list";
 	}
 

@@ -35,7 +35,7 @@ public class TradeController {
 	@RequestMapping("/trade/list")
 	public String home(Model model) {
 		LOGGER.info("Getting the trades list");
-		model.addAttribute("trades", tradeRepository.findAll());
+		model.addAttribute("trade", tradeRepository.findAll());
 		return "trade/list";
 	}
 

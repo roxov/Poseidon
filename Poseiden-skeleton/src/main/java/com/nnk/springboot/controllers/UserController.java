@@ -70,7 +70,9 @@ public class UserController {
 
 	@PostMapping("/user/update/{id}")
 	public String updateUser(@PathVariable("id") Integer id, @Valid User user, BindingResult result, Model model) {
-		if (result.hasErrors()) {
+		if (result.hasErrors() || !RegexValidator.validatePassword(user.getPassword())) {
+			LOGGER.error(
+					"There are some incorrect datas. The password must contain 8 characters, 1 capital, 1 number and 1 special character ");
 			return "user/update";
 		}
 		user.setId(id);

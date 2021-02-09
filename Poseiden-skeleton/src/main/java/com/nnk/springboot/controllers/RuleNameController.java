@@ -35,7 +35,7 @@ public class RuleNameController {
 	@RequestMapping("/ruleName/list")
 	public String home(Model model) {
 		LOGGER.info("Getting the rule names list");
-		model.addAttribute("ruleNames", ruleNameRepository.findAll());
+		model.addAttribute("rulename", ruleNameRepository.findAll());
 		return "ruleName/list";
 	}
 

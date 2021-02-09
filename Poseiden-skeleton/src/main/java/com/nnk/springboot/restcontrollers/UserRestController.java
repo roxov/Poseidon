@@ -58,8 +58,14 @@ public class UserRestController {
 			LOGGER.error("The id is mandatory.");
 			return Optional.empty();
 		}
-		LOGGER.info("Updating user");
-		return Optional.of(userService.updateUser(user));
+		if (RegexValidator.validatePassword(user.getPassword())) {
+			LOGGER.info("Updating user");
+			return Optional.of(userService.updateUser(user));
+		} else {
+			LOGGER.error("The password must contain 8 characters, 1 capital, 1 number and 1 special character ");
+			return Optional.empty();
+		}
+
 	}
 
 	@DeleteMapping(value = "/user")

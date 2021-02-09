@@ -1,7 +1,6 @@
 package com.nnk.springboot.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,12 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 @Entity
 @Table(name = "users")
-public class User implements Serializable, UserDetails {
+public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -112,7 +108,6 @@ public class User implements Serializable, UserDetails {
 		this.id = id;
 	}
 
-	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -121,7 +116,6 @@ public class User implements Serializable, UserDetails {
 		this.username = username;
 	}
 
-	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -146,28 +140,4 @@ public class User implements Serializable, UserDetails {
 		this.role = role;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return false;
-	}
 }

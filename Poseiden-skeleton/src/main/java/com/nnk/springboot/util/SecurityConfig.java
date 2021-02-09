@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -15,16 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.nnk.springboot.repositories.UserRepository;
-import com.nnk.springboot.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	UserService userService;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,10 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/user/**", "/rest/user/**").hasRole("ADMIN")
-				.antMatchers("/", "/home", "/error", "/rest/", "/rest/error/").permitAll()
-				.antMatchers("/login*", "/rest/login*").permitAll().anyRequest().authenticated().and().formLogin()
-				.defaultSuccessUrl("/bidList/list").and().exceptionHandling().accessDeniedPage("/error").and().logout()
-				.logoutUrl("/app-logout").logoutSuccessUrl("/").and().httpBasic();
+				.antMatchers("/", "/home", "/rest/").permitAll().antMatchers("/login*").permitAll().anyRequest()
+				.authenticated().and().formLogin().defaultSuccessUrl("/bidList/list", true).and().exceptionHandling()
+				.accessDeniedPage("/error").and().logout().logoutUrl("/app-logout").logoutSuccessUrl("/").and()
+				.httpBasic().and().csrf().disable();
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/error");
 	}
 
 	@Bean
@@ -56,7 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-		// return NoOpPasswordEncoder.getInstance();
 	}
 
 }
