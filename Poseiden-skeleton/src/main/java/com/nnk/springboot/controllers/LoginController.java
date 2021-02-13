@@ -38,13 +38,13 @@ public class LoginController {
 		return mav;
 	}
 
-	@GetMapping("error")
-	public ModelAndView error() {
-		ModelAndView mav = new ModelAndView();
-		String errorMessage = "You are not authorized for the requested data.";
-		mav.addObject("errorMsg", errorMessage);
-		LOGGER.info("Getting 403 error page");
-		mav.setViewName("403");
-		return mav;
-	}
+//	@GetMapping("error")
+//	public ModelAndView error() {
+//		ModelAndView mav = new ModelAndView();
+//		String errorMessage = "You are not authorized for the requested data.";
+//		mav.addObject("errorMsg", errorMessage);
+//		LOGGER.info("Getting 403 error page");
+//		mav.setViewName("403");
+//		return mav;
+//	}
 }
