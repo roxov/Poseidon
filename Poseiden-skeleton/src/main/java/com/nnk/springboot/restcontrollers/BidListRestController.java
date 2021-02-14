@@ -65,12 +65,12 @@ public class BidListRestController {
 	}
 
 	@DeleteMapping(value = "/bidList")
-	public void deleteBidList(@RequestParam Integer BidListId) {
-		if (BidListId == null) {
+	public void deleteBidList(@RequestParam Integer bidListId) {
+		if (bidListId == null) {
 			LOGGER.error("The id must be fielded.");
 		} else {
 			LOGGER.info("Deleting bid list");
-			bidListService.deleteBidList(BidListId);
+			bidListService.deleteBidList(bidListId);
 		}
 	}
 }

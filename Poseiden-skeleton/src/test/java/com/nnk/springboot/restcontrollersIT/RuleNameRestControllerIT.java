@@ -22,62 +22,61 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.domain.RuleName;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TradeRestControllerIT {
-
+public class RuleNameRestControllerIT {
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	private Integer tradeId;
+	private Integer ruleNameId;
 
 	@BeforeEach
 	public void setUp() throws JsonProcessingException, Exception {
-		Trade trade = new Trade("account", "type");
+		RuleName ruleName = new RuleName("name", "description", "json", "template", "sqlStr", "sqlPart");
 		String jsonResponse = mockMvc
-				.perform(post("/rest/trade").contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(trade)))
+				.perform(post("/rest/ruleName").contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(ruleName)))
 				.andReturn().getResponse().getContentAsString();
 
-		tradeId = JsonPath.parse(jsonResponse).read("$.tradeId");
+		ruleNameId = JsonPath.parse(jsonResponse).read("$.id");
 	}
 
 	@Test
 	@WithMockUser
-	void givenATrade_whenPostTrade_thenReturns200AndTrade() throws Exception {
-		Trade trade = new Trade("account1", "type1");
-		mockMvc.perform(post("/rest/trade").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(trade))).andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.account").value("account1"));
+	void givenARuleName_whenPostRuleName_thenReturns200AndRuleName() throws Exception {
+		RuleName ruleName = new RuleName("name1", "description1", "json1", "template1", "sqlStr1", "sqlPart1");
+		mockMvc.perform(post("/rest/ruleName").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ruleName))).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("name1"));
 	}
 
 	@WithMockUser
 	@Test
-	public void givenAnId_whenGetTrade_thenReturnOk() throws Exception {
+	public void givenAnId_whenGetRuleName_thenReturnOkAndRuleName() throws Exception {
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/rest/trade?tradeId={id}", tradeId).accept(MediaType.APPLICATION_JSON))
+				MockMvcRequestBuilders.get("/rest/ruleName?id={id}", ruleNameId).accept(MediaType.APPLICATION_JSON))
 				.andDo(print()).andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.account").value("account"));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("name"));
 	}
 
 	@Test
 	@WithMockUser
-	void givenATrade_whenPutTrade_thenReturns200AndUpdatedTrade() throws Exception {
-		Trade trade = new Trade(tradeId, "account", "type");
-		mockMvc.perform(put("/rest/trade").contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(trade))).andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.account").value("account"));
+	void givenARuleName_whenPutRuleName_thenReturns200AndUpdatedRuleName() throws Exception {
+		RuleName ruleName = new RuleName(ruleNameId, "name2", "description", "json", "template", "sqlStr", "sqlPart");
+		mockMvc.perform(put("/rest/ruleName").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(ruleName))).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("name2"));
 	}
 
 	@Test
 	@WithMockUser
-	void givenATrade_whenDeleteTrade_thenReturns200() throws Exception {
-		mockMvc.perform(delete("/rest/trade?tradeId={id}", tradeId)).andExpect(status().isOk());
+	void givenARuleName_whenDeleteRuleName_thenReturns200() throws Exception {
+		mockMvc.perform(delete("/rest/ruleName?id={id}", ruleNameId)).andExpect(status().isOk());
 	}
 }
